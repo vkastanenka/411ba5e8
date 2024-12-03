@@ -52,7 +52,7 @@ export const serverRequestServer = async <
     const res = await axios({
       data,
       method,
-      url: `${process.env.NEXT_AIRCALL_API_URL}${endpoint}`,
+      url: `https://aircall-api.onrender.com${endpoint}`,
     })
     return res as AxiosResponse<T>
   } catch (err) {
