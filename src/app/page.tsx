@@ -15,12 +15,12 @@ const HomePage = async () => {
     return <div>Server error!</div>
   }
 
-  const feedCalls = calls.filter((call) => !call.is_archived)
-  const archiveCalls = calls.filter((call) => call.is_archived)
+  const feedCalls = calls.filter((call) => !call.is_archived).reverse()
+  const archiveCalls = calls.filter((call) => call.is_archived).reverse()
 
   return (
     <div className="h-full relative flex items-center justify-center">
-      <Card className="w-[376px] h-[666px] overflow-scroll">
+      <Card className="w-[376px] h-[666px] overflow-scroll relative">
         <Header />
         <div className="p-[20px]">
           <Tabs defaultValue="feed">
@@ -42,7 +42,7 @@ const HomePage = async () => {
                     })}
                   </>
                 ) : (
-                  <p>No calls in archive</p>
+                  <p>No calls in feed.</p>
                 )}
               </div>
             </TabsContent>
@@ -56,7 +56,7 @@ const HomePage = async () => {
                     })}
                   </>
                 ) : (
-                  <p>No calls in archive</p>
+                  <p>No calls in archive.</p>
                 )}
               </div>
             </TabsContent>

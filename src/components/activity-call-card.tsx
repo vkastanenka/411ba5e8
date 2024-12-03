@@ -1,9 +1,7 @@
 'use client'
 
-// actions
-import { getActivityCall, patchActivityCall } from '@/actions/activity'
-
 // components
+import { ArchiveButton } from '@/components/archive-button'
 import { CallButton } from '@/components/call-button'
 import {
   Dialog,
@@ -13,14 +11,11 @@ import {
 } from '@/components/ui/dialog'
 
 // svg
-import { LoaderCircle, Phone } from 'lucide-react'
 import { PhoneIncoming, PhoneOutgoing } from '@/components/svg'
 
 // utils
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { format as formatDate, parseISO } from 'date-fns'
-import { useRouter } from 'next/navigation'
-import { useToast } from '@/hooks/use-toast'
 
 // types
 import { ActivityCall } from '@/types/activity'
@@ -79,38 +74,6 @@ export const ActivityCardModal: React.FC<ActivityCardModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
-  const router = useRouter()
-  const { toast } = useToast()
-
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
-  const patchCall = async () => {
-    await setIsLoading(true)
-
-    const res = await patchActivityCall(call.id, {
-      is_archived: !call.is_archived,
-    })
-
-    if (res.status !== 200) {
-      toast({
-        title: 'Error!',
-        description: 'Unable to update call.',
-      })
-      await setIsLoading(false)
-      return
-    }
-
-    router.refresh()
-
-    toast({
-      title: 'Success!',
-      description: 'Call successfully updated.',
-    })
-
-    await setIsLoading(false)
-    await setIsModalOpen(false)
-  }
-
   return (
     <Dialog open={isModalOpen} onOpenChange={(e) => setIsModalOpen(e)}>
       <DialogContent className="bg-card flex flex-col gap-4 min-h-[394px]">
@@ -143,13 +106,11 @@ export const ActivityCardModal: React.FC<ActivityCardModalProps> = ({
             <p className="text-[14px]">Aircall number:</p>
             <p className="text-[14px]">{call.via}</p>
           </div>
-          <button
-            disabled={isLoading}
-            className="text-[16px] p-2 border-[1px] rounded-md bg-slate-100"
-            onClick={patchCall}
-          >
-            {`${call.is_archived ? 'Unarchive' : 'Archive'} Call`}
-          </button>
+          <ArchiveButton
+            calls={[call]}
+            onSuccess={() => setIsModalOpen(false)}
+            type={call.is_archived ? 'unarchive' : 'archive'}
+          />
         </div>
       </DialogContent>
     </Dialog>

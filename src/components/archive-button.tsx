@@ -3,6 +3,9 @@
 // actions
 import { patchActivityCall } from '@/actions/activity'
 
+// components
+import { LoaderCircle } from 'lucide-react'
+
 // utils
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -14,11 +17,13 @@ import { ActivityCall } from '@/types/activity'
 interface ArchiveButtonProps {
   calls: ActivityCall[]
   type: 'archive' | 'unarchive'
+  onSuccess?: () => void
 }
 
 export const ArchiveButton: React.FC<ArchiveButtonProps> = ({
   calls,
   type,
+  onSuccess,
 }) => {
   const router = useRouter()
   const { toast } = useToast()
@@ -59,6 +64,8 @@ export const ArchiveButton: React.FC<ArchiveButtonProps> = ({
     })
 
     await setIsLoading(false)
+
+    if (onSuccess) onSuccess()
   }
 
   return (
@@ -67,7 +74,13 @@ export const ArchiveButton: React.FC<ArchiveButtonProps> = ({
       disabled={isLoading}
       className="button-text border-[1px]"
     >
-      {`${type === 'archive' ? 'Archive' : 'Unarchive'} All Calls`}
+      {isLoading ? (
+        <LoaderCircle className="animate-spin" />
+      ) : (
+        `${type === 'archive' ? 'Archive' : 'Unarchive'} ${
+          calls.length === 1 ? 'Call' : 'All Calls'
+        }`
+      )}
     </button>
   )
 }

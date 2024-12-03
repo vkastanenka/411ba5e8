@@ -1,6 +1,6 @@
 export const Header = () => {
   return (
-    <header className="py-[20px] shadow-[0_1px_0_0_rgba(0,0,0,0.1)] flex justify-center">
+    <header className="bg-card sticky top-0 left-0 right-0 py-[20px] shadow-[0_1px_0_0_rgba(0,0,0,0.1)] flex justify-center">
       <svg
         className="w-[115px]"
         viewBox="0 0 486 168"

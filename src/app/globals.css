@@ -26,12 +26,12 @@
     --popover: #ffffff;
     /* slate-50 */
     --popover-foreground: #0f1729;
-    /* purple-500 */
-    --primary: #a855f7;
+    /* blue-700 */
+    --primary: #1d4ed8;
     /* slate-50 */
     --primary-foreground: #f8fafc;
-    /* purple-600 */
-    --secondary: #9234ea;
+    /* blue-800 */
+    --secondary: #1e40af;
     /* slate-50 */
     --secondary-foreground: #f8fafc;
     /* slate-200 */
@@ -54,8 +54,8 @@
     --border: #e2e8f0;
     /* slate-50 */
     --input: #f8fafc;
-    /* purple-500 */
-    --ring: #a855f7;
+    /* blue-700 */
+    --ring: #1d4ed8;
     --radius: 0.5rem;
   }
 }
