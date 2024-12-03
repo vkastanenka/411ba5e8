@@ -4,6 +4,7 @@
 import { getActivityCall, patchActivityCall } from '@/actions/activity'
 
 // components
+import { CallButton } from '@/components/call-button'
 import {
   Dialog,
   DialogTitle,
@@ -18,10 +19,11 @@ import { PhoneIncoming, PhoneOutgoing } from '@/components/svg'
 // utils
 import { useState, useEffect } from 'react'
 import { format as formatDate, parseISO } from 'date-fns'
+import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
 
 // types
 import { ActivityCall } from '@/types/activity'
-import { useRouter } from 'next/navigation'
 
 interface ActivityCallCardProps {
   call: ActivityCall
@@ -35,11 +37,11 @@ export const ActivityCallCard: React.FC<ActivityCallCardProps> = ({
 
   return (
     <div
-      className="p-2 border-[1px] rounded-md bg-slate-100 flex items-center gap-4"
+      className="border-[1px] rounded-md bg-background flex items-center gap-4"
       {...props}
     >
       <button
-        className="transition-colors flex items-center gap-4 grow hover:bg-slate-200 focus:bg-slate-200"
+        className="button-text justify-start gap-4 grow"
         onClick={() => setIsModalOpen((prevState) => !prevState)}
       >
         {call.direction === 'inbound' ? (
@@ -48,15 +50,13 @@ export const ActivityCallCard: React.FC<ActivityCallCardProps> = ({
           <PhoneOutgoing callType={call.call_type} />
         )}
         <div className="flex flex-col gap-1 items-start">
-          <p className="text-[16px]">{call.from}</p>
-          <p className="text-[12px]">
+          <p>{call.from}</p>
+          <p className="text-xs">
             {formatDate(parseISO(call.created_at), 'MMM dd, h:mm aaa')}
           </p>
         </div>
       </button>
-      <button className="transition-colors hover:bg-slate-200 focus:bg-slate-200">
-        <Phone />
-      </button>
+      <CallButton call={call} />
       {isModalOpen && (
         <ActivityCardModal
           call={call}
@@ -80,19 +80,35 @@ export const ActivityCardModal: React.FC<ActivityCardModalProps> = ({
   setIsModalOpen,
 }) => {
   const router = useRouter()
+  const { toast } = useToast()
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const patchCall = async () => {
+    await setIsLoading(true)
+
     const res = await patchActivityCall(call.id, {
       is_archived: !call.is_archived,
     })
 
     if (res.status !== 200) {
-      window.alert('Error updating call!')
+      toast({
+        title: 'Error!',
+        description: 'Unable to update call.',
+      })
+      await setIsLoading(false)
+      return
     }
 
-    await router.refresh()
+    router.refresh()
 
-    setIsModalOpen(false)
+    toast({
+      title: 'Success!',
+      description: 'Call successfully updated.',
+    })
+
+    await setIsLoading(false)
+    await setIsModalOpen(false)
   }
 
   return (
@@ -128,10 +144,11 @@ export const ActivityCardModal: React.FC<ActivityCardModalProps> = ({
             <p className="text-[14px]">{call.via}</p>
           </div>
           <button
+            disabled={isLoading}
             className="text-[16px] p-2 border-[1px] rounded-md bg-slate-100"
             onClick={patchCall}
           >
-            {`${call.is_archived ? 'Unarchive' : 'Archive'} call`}
+            {`${call.is_archived ? 'Unarchive' : 'Archive'} Call`}
           </button>
         </div>
       </DialogContent>

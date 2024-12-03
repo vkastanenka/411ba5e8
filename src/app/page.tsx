@@ -2,7 +2,8 @@
 import { getActivityCalls } from '@/actions/activity'
 
 // components
-import { Card } from '@/components/card'
+import { ArchiveButton } from '@/components/archive-button'
+import { Card } from '@/components/ui/card'
 import { Header } from '@/components/header'
 import { ActivityCallCard } from '@/components/activity-call-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -13,6 +14,9 @@ const HomePage = async () => {
   if (!calls) {
     return <div>Server error!</div>
   }
+
+  const feedCalls = calls.filter((call) => !call.is_archived)
+  const archiveCalls = calls.filter((call) => call.is_archived)
 
   return (
     <div className="h-full relative flex items-center justify-center">
@@ -30,26 +34,30 @@ const HomePage = async () => {
             </TabsList>
             <TabsContent value="feed">
               <div className="flex flex-col gap-4">
-                <button className="text-[16px] p-2 border-[1px] rounded-md bg-slate-100">
-                  Archive All Calls
-                </button>
-                {calls
-                  .filter((call) => !call.is_archived)
-                  .map((call, i) => {
-                    return <ActivityCallCard key={i} call={call} />
-                  })}
+                {feedCalls.length > 0 ? (
+                  <>
+                    <ArchiveButton calls={feedCalls} type="archive" />
+                    {feedCalls.map((call, i) => {
+                      return <ActivityCallCard key={i} call={call} />
+                    })}
+                  </>
+                ) : (
+                  <p>No calls in archive</p>
+                )}
               </div>
             </TabsContent>
             <TabsContent value="archive">
               <div className="flex flex-col gap-4">
-                <button className="text-[16px] p-2 border-[1px] rounded-md bg-slate-100">
-                  Unarchive All Calls
-                </button>
-                {calls
-                  .filter((call) => call.is_archived)
-                  .map((call, i) => {
-                    return <ActivityCallCard key={i} call={call} />
-                  })}
+                {archiveCalls.length > 0 ? (
+                  <>
+                    <ArchiveButton calls={archiveCalls} type="unarchive" />
+                    {archiveCalls.map((call, i) => {
+                      return <ActivityCallCard key={i} call={call} />
+                    })}
+                  </>
+                ) : (
+                  <p>No calls in archive</p>
+                )}
               </div>
             </TabsContent>
           </Tabs>

@@ -1,3 +1,6 @@
+// components
+import { Toaster } from '@/components/ui/toaster'
+
 // utils
 import { cn } from '@/lib/utils'
 import { Inter } from 'next/font/google'
@@ -22,7 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className)}>{children}</body>
+      <body className={cn(inter.className)}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   )
 }
