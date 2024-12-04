@@ -36,6 +36,7 @@ export const formatServerError = (err: unknown): ErrRes => {
   })
 }
 
+// Requests api and types return data
 export const serverRequestServer = async <
   T = object | undefined,
   S = object | undefined

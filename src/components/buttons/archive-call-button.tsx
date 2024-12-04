@@ -14,13 +14,13 @@ import { useToast } from '@/hooks/use-toast'
 // types
 import { ActivityCall } from '@/types/activity'
 
-interface ArchiveButtonProps {
+interface ArchiveCallButtonProps {
   calls: ActivityCall[]
   type: 'archive' | 'unarchive'
   onSuccess?: () => void
 }
 
-export const ArchiveButton: React.FC<ArchiveButtonProps> = ({
+export const ArchiveCallButton: React.FC<ArchiveCallButtonProps> = ({
   calls,
   type,
   onSuccess,
@@ -36,16 +36,19 @@ export const ArchiveButton: React.FC<ArchiveButtonProps> = ({
     await setIsLoading(true)
     const reqBody = { is_archived: type === 'archive' }
 
+    // Patch all calls provided
     const patchResponses = await Promise.all(
       calls.map(async (call) => {
         return await patchActivityCall(call.id, reqBody)
       })
     )
 
+    // For each response, if there is an error, push to errors
     patchResponses.forEach((res) => {
       if (res.status !== 200) errors.push(res)
     })
 
+    // If errors, alert user
     if (errors.length > 0) {
       router.refresh()
       toast({

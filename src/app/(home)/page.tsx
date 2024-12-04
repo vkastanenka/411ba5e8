@@ -2,10 +2,13 @@
 import { getActivityCalls } from '@/actions/activity'
 
 // components
-import { ActivityCallCard } from '@/components/activity-call-card'
-import { ArchiveButton } from '@/components/archive-button'
-import { CallsCard } from '@/components/calls-card'
+import { ActivityCallCard } from '@/components/cards/activity-call-card'
+import { ArchiveCallButton } from '@/components/buttons/archive-call-button'
+import { CallsCard } from '@/components/cards/calls-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+// utils
+import { sortCalls } from '@/lib/utils'
 
 const HomePage = async () => {
   const { data: calls } = await getActivityCalls()
@@ -16,8 +19,8 @@ const HomePage = async () => {
     )
   }
 
-  const feedCalls = calls.filter((call) => !call.is_archived).reverse()
-  const archiveCalls = calls.filter((call) => call.is_archived).reverse()
+  const feedCalls = sortCalls(calls.filter((call) => !call.is_archived))
+  const archiveCalls = sortCalls(calls.filter((call) => call.is_archived))
 
   return (
     <CallsCard>
@@ -34,7 +37,7 @@ const HomePage = async () => {
           <div className="flex flex-col gap-4">
             {feedCalls.length > 0 ? (
               <>
-                <ArchiveButton calls={feedCalls} type="archive" />
+                <ArchiveCallButton calls={feedCalls} type="archive" />
                 {feedCalls.map((call, i) => {
                   return <ActivityCallCard key={i} call={call} />
                 })}
@@ -48,7 +51,7 @@ const HomePage = async () => {
           <div className="flex flex-col gap-4">
             {archiveCalls.length > 0 ? (
               <>
-                <ArchiveButton calls={archiveCalls} type="unarchive" />
+                <ArchiveCallButton calls={archiveCalls} type="unarchive" />
                 {archiveCalls.map((call, i) => {
                   return <ActivityCallCard key={i} call={call} />
                 })}

@@ -1,6 +1,6 @@
 // components
 import { Card } from '@/components/ui/card'
-import { Header } from '@/components/header'
+import { Header } from '@/components/layout/header'
 
 export const CallsCard = ({ children }: { children: React.ReactElement | string }) => {
   return (
