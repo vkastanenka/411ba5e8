@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // utils
 import { sortCalls } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 const HomePage = async () => {
   const { data: calls } = await getActivityCalls()
 
